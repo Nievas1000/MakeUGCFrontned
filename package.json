@@ -12,6 +12,7 @@
   "dependencies": {
     "@ffmpeg/ffmpeg": "^0.12.15",
     "@tailwindcss/vite": "^4.1.10",
+    "date-fns": "^4.1.0",
     "framer-motion": "^12.18.1",
     "lucide-react": "^0.515.0",
     "react": "^19.1.0",
