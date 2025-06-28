@@ -95,36 +95,23 @@ export default function FacebookAdsRecreator() {
   return (
     <div className="max-w-md mx-auto pt-5 space-y-6">
       {/* Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-          <div className="bg-white w-full max-w-5xl mx-auto rounded-2xl shadow-xl p-6 relative animate-fade-in">
+
+      {modalReady && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/30 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-xl shadow-xl p-6 max-w-md w-full relative text-center space-y-4">
             <button
-              onClick={closeModal}
-              className="absolute top-3 right-4 text-gray-400 hover:text-black text-xl"
+              onClick={() => setModalReady(false)}
+              className="absolute top-2 right-3 text-gray-600 hover:text-red-600 text-2xl"
             >
-              &times;
+              ×
             </button>
 
-            {modalReady && (
-              <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/30 backdrop-blur-sm p-4">
-                <div className="bg-white rounded-xl shadow-xl p-6 max-w-md w-full relative text-center space-y-4">
-                  <button
-                    onClick={() => setModalReady(false)}
-                    className="absolute top-2 right-3 text-gray-600 hover:text-red-600 text-2xl"
-                  >
-                    ×
-                  </button>
-
-                  <h3 className="text-lg font-semibold">
-                    We'll notify you via email once your video is ready.
-                  </h3>
-                </div>
-              </div>
-            )}
+            <h3 className="text-lg font-semibold">
+              We'll notify you via email once your video is ready.
+            </h3>
           </div>
         </div>
       )}
-
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
         <input
