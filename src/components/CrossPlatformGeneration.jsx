@@ -165,7 +165,7 @@ export default function CrossPlatformGeneration() {
 
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/30 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-xl shadow-xl p-6 max-w-4xl w-full relative space-y-4">
+          <div className="bg-white rounded-xl shadow-xl p-6 max-w-md w-full relative text-center space-y-4">
             <button
               onClick={() => setShowModal(false)}
               className="absolute top-2 right-3 text-gray-600 hover:text-red-600 text-2xl"
@@ -173,29 +173,9 @@ export default function CrossPlatformGeneration() {
               ×
             </button>
 
-            <h3 className="text-lg font-semibold text-center mb-4">
-              Video Preview
+            <h3 className="text-lg font-semibold">
+              We'll notify you via email once your video is ready.
             </h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex flex-col items-center space-y-1">
-                <p className="text-sm text-gray-500">Original Ad</p>
-                <video
-                  src={previewUrl}
-                  controls
-                  className="rounded max-h-[200px] w-full object-contain"
-                />
-              </div>
-
-              <div className="flex flex-col items-center space-y-1">
-                <p className="text-sm text-gray-500">Result</p>
-                <video
-                  src={resultVideo}
-                  controls
-                  className="rounded max-h-[200px] w-full object-contain"
-                />
-              </div>
-            </div>
           </div>
         </div>
       )}

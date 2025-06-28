@@ -210,65 +210,18 @@ export default function LanguageTranslation() {
       </form>
 
       {showModal && (
-        <div
-          className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4"
-          onClick={() => setShowModal(false)}
-        >
-          <div
-            className="bg-white shadow-xl rounded-lg p-6 w-full max-w-4xl overflow-auto max-h-[90vh] border"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 className="text-xl font-semibold text-center mb-6">
-              Translated Videos
-            </h2>
-
-            {/* Video original */}
-            <div className="flex justify-center mb-6">
-              <div className="text-center">
-                <p className="font-medium mb-2">Original Video</p>
-                <video controls className="w-[300px] rounded">
-                  <source src={originalPreview} type="video/mp4" />
-                </video>
-              </div>
-            </div>
-
-            {/* Videos traducidos */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="text-center">
-                <p className="font-medium mb-2">Arabic</p>
-                <video controls className="w-full rounded">
-                  <source
-                    src="https://d2z160kjf6fhi8.cloudfront.net/cmboy4hyo0otmy1o6cnq00/private/cmc2bp40a000ux0lvjd19n1z2_1750274283.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAXEFUNV7O4BRRCEX5%2F20250618%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20250618T191827Z&X-Amz-Expires=604800&X-Amz-Signature=a2bb37b06265085e7997333516905a7bd4bb8abc7474bf4298823fdf3f3c3be0&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3B%20filename%3Dcmc2bp40a000ux0lvjd19n1z2.mp4&x-id=GetObject"
-                    type="video/mp4"
-                  />
-                </video>
-              </div>
-              <div className="text-center">
-                <p className="font-medium mb-2">German</p>
-                <video controls className="w-full rounded">
-                  <source
-                    src="https://d2z160kjf6fhi8.cloudfront.net/cmboy4hyo0otmy1o6cnq00/private/cmc2c5gy500024dlivoy5091y_1750274704.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAXEFUNV7O4BRRCEX5%2F20250618%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20250618T192534Z&X-Amz-Expires=604800&X-Amz-Signature=3148db05af75b996a8fea1c35d6b1de9d946adc12922309652345e3388cc458e&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3B%20filename%3Dcmc2c5gy500024dlivoy5091y.mp4&x-id=GetObject"
-                    type="video/mp4"
-                  />
-                </video>
-              </div>
-              <div className="text-center">
-                <p className="font-medium mb-2">Spanish</p>
-                <video controls className="w-full rounded">
-                  <source
-                    src="https://d2z160kjf6fhi8.cloudfront.net/cmboy4hyo0otmy1o6cnq00/private/cmc2cevl8001px0lvh4hyb56s_1750275453.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAXEFUNV7O4BRRCEX5%2F20250618%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20250618T193756Z&X-Amz-Expires=604800&X-Amz-Signature=590de21a93a65bcc0c5ce7d07e918c1032b0f22daea20cc990c153e08712bb6d&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3B%20filename%3Dcmc2cevl8001px0lvh4hyb56s.mp4&x-id=GetObject"
-                    type="video/mp4"
-                  />
-                </video>
-              </div>
-            </div>
-
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/30 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-xl shadow-xl p-6 max-w-md w-full relative text-center space-y-4">
             <button
-              className="mt-8 mx-auto block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded transition"
               onClick={() => setShowModal(false)}
+              className="absolute top-2 right-3 text-gray-600 hover:text-red-600 text-2xl"
             >
-              Close
+              ×
             </button>
+
+            <h3 className="text-lg font-semibold">
+              We'll notify you via email once your video is ready.
+            </h3>
           </div>
         </div>
       )}

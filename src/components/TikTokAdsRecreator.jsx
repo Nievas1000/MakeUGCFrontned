@@ -107,57 +107,19 @@ export default function TikTokAdsRecreator() {
               &times;
             </button>
 
-            {!modalReady ? (
-              <div className="text-center py-8">
-                <svg
-                  className="w-10 h-10 mx-auto text-blue-500 animate-spin"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  />
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8v8z"
-                  />
-                </svg>
-                <p className="text-lg font-semibold mt-3">
-                  Generating script...
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-5 pt-2">
-                <h2 className="text-xl font-bold text-center">
-                  Your Video is Ready
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <p className="font-semibold mb-2 text-center">
-                      Original TikTok Ad:
-                    </p>
-                    <video
-                      controls
-                      src={videoOriginal}
-                      className="w-full rounded-lg border"
-                    />
-                  </div>
-                  <div>
-                    <p className="font-semibold mb-2 text-center">
-                      Generated Video:
-                    </p>
-                    <video
-                      controls
-                      src="https://d2z160kjf6fhi8.cloudfront.net/cmboy4hyo0otmy1o6cnq00/private/cmc0oz4ol000hkf2avcvllk1n_1750175253.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAXEFUNV7O4BRRCEX5%2F20250617%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20250617T154801Z&X-Amz-Expires=604800&X-Amz-Signature=0b797abae8cd643f1f0e5d647e3531f2a3bf26ae6d04b59bbf7e553b9e20c028&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3B%20filename%3Dcmc0oz4ol000hkf2avcvllk1n.mp4&x-id=GetObject"
-                      className="w-full rounded-lg border"
-                    />
-                  </div>
+            {modalReady && (
+              <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/30 backdrop-blur-sm p-4">
+                <div className="bg-white rounded-xl shadow-xl p-6 max-w-md w-full relative text-center space-y-4">
+                  <button
+                    onClick={() => setModalReady(false)}
+                    className="absolute top-2 right-3 text-gray-600 hover:text-red-600 text-2xl"
+                  >
+                    ×
+                  </button>
+
+                  <h3 className="text-lg font-semibold">
+                    We'll notify you via email once your video is ready.
+                  </h3>
                 </div>
               </div>
             )}

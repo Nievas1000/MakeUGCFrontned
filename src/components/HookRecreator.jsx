@@ -122,43 +122,18 @@ export default function HookRecreator() {
       </form>
 
       {showModal && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
-          <div className="bg-white rounded-lg p-6 max-w-5xl w-full relative shadow-xl border border-gray-200">
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/30 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-xl shadow-xl p-6 max-w-md w-full relative text-center space-y-4">
             <button
               onClick={() => setShowModal(false)}
-              className="absolute top-2 right-2 text-gray-500 hover:text-black text-2xl"
+              className="absolute top-2 right-3 text-gray-600 hover:text-red-600 text-2xl"
             >
               ×
             </button>
 
-            <h2 className="text-center text-lg font-semibold mb-4">
-              Orginal Video
-            </h2>
-
-            <div className="flex justify-center mb-6">
-              {originalUrl && (
-                <video
-                  src={originalUrl}
-                  controls
-                  className="rounded h-96 w-auto"
-                />
-              )}
-            </div>
-            <h2 className="text-center text-lg font-semibold mb-4">
-              Generated Variants
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {VARIANTS.map(({ label, video_url }) => (
-                <div key={label} className="text-center">
-                  <p className="font-medium text-sm mb-2">{label}</p>
-                  <video
-                    src={video_url}
-                    controls
-                    className="rounded w-full h-96 object-cover"
-                  />
-                </div>
-              ))}
-            </div>
+            <h3 className="text-lg font-semibold">
+              We'll notify you via email once your video is ready.
+            </h3>
           </div>
         </div>
       )}
