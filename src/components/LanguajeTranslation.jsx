@@ -128,7 +128,7 @@ export default function LanguageTranslation() {
       formData.append("languages", JSON.stringify(languages));
       console.log(compressed);
       await fetch(
-        "https://pdog.app.n8n.cloud/webhook-test/ff839c4a-f848-4e3b-94a9-1b6679cf12ff",
+        "https://pdog.app.n8n.cloud/webhook/ff839c4a-f848-4e3b-94a9-1b6679cf12ff",
         {
           method: "POST",
           body: formData,
