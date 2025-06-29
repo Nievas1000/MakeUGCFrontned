@@ -22,16 +22,16 @@ export default function BriefCreator() {
     "Hi, I'm Dr. Mehmet from EMPHAIR Clinic, and today we're going to be doing an advanced DHI hair transplant. I'll show you exactly how we achieve natural results with our needle-free technology. Step one, we map your donor area and determine the perfect hairline design. What most people don't realize is that we extract each follicle at the perfect angle to match your natural growth pattern. And here's the best part - we use our special needle-free anesthesia system, so you feel absolutely nothing during the entire procedure. We use a specialized DHI implanter pen that creates the channel and places the graft simultaneously. You'll be completely comfortable throughout - no pain, no discomfort whatsoever. Then we'll carefully implant each follicle at the exact angle and depth, and you'll see immediate results with no scarring."
   );
   const [optimizedTranscript, setOptimizedTranscript] = useState("");
-  const [optimizedScriptFromImages, setOptimizedScriptFromImages] =
-    useState("");
+  const [optimizedDataFromImages, setOptimizedDataFromImages] = useState("");
   const [framesAnalysis, setFrameAnalysis] = useState();
   const [showModal, setShowModal] = useState(false);
   const [briefFinalData, setBriefFinalData] = useState([]);
   const [hookBody, setHookBody] = useState();
+  const [inspirationData, setInspirationData] = useState();
 
   const { screenshots, concatenatedText } = useVideoScreenshots(
     videoFile,
-    setOptimizedScriptFromImages,
+    setOptimizedDataFromImages,
     originalTranscript,
     setStep,
     setFrameAnalysis
@@ -86,9 +86,13 @@ export default function BriefCreator() {
       return;
     }
 
+    const renamedFile = new File([file], "uploaded-video.mp4", {
+      type: "video/mp4",
+    });
+
     setError("");
-    setVideoFile(file);
-    setVideoUrl(URL.createObjectURL(file));
+    setVideoFile(renamedFile);
+    setVideoUrl(URL.createObjectURL(renamedFile));
   };
 
   const handleCreateBrief = async () => {
@@ -134,7 +138,6 @@ export default function BriefCreator() {
             bodyCount,
             hookCount,
             originalTranscript,
-            optimizedScriptFromImages,
             imagesText,
             optimizedOriginalTranscript: optimizedTranscript,
           }),
@@ -160,6 +163,7 @@ export default function BriefCreator() {
           hookBody={hookBody}
           inspirationDescription={originalTranscript}
           inspirationUrl={inspirationVideoUrl}
+          optimizedDataFromImages={optimizedDataFromImages}
         />
       ) : (
         <>

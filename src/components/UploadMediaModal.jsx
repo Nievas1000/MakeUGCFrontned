@@ -18,16 +18,24 @@ export default function UploadModal({
       (file) => file.type.startsWith("image/") || file.type.startsWith("video/")
     );
 
-    const filesWithMeta = validFiles.map((file) => ({
-      file,
-      optimize: false,
-      primaryText: "",
-      type: file.type.startsWith("image/") ? "image" : "video",
-      previewUrl: URL.createObjectURL(file),
-    }));
+    const filesWithMeta = validFiles.map((file) => {
+      const isVideo = file.type.startsWith("video/");
+      const renamedFile = isVideo
+        ? new File([file], "uploaded-video.mp4", { type: "video/mp4" })
+        : file;
+
+      return {
+        file: renamedFile,
+        optimize: false,
+        primaryText: "",
+        type: isVideo ? "video" : "image",
+        previewUrl: URL.createObjectURL(renamedFile),
+      };
+    });
 
     setMediaFiles(filesWithMeta);
   };
+
   const handleSave = async () => {
     setIsSaving(true);
     let adsetId = null;

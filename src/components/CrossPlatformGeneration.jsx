@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { extractAudioFromVideo } from "../utils/compressVideo";
 
 export default function CrossPlatformGeneration() {
   const [mode, setMode] = useState("metaToTikTok");
@@ -68,9 +69,9 @@ export default function CrossPlatformGeneration() {
       const videoFile = new File([videoBlob], "ad-video.mp4", {
         type: "video/mp4",
       });
-
+      const compressed = await extractAudioFromVideo(videoFile);
       const formData = new FormData();
-      formData.append("video", videoFile);
+      formData.append("video", compressed);
       formData.append("brandUrl", brandUrl);
       formData.append("email", email);
       formData.append("adUrl", data.videoUrl);

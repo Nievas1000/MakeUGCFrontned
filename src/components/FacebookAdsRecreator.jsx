@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { extractAudioFromVideo } from "../utils/compressVideo";
 
 export default function FacebookAdsRecreator() {
   const [metaLink, setMetaLink] = useState("");
@@ -61,8 +62,10 @@ export default function FacebookAdsRecreator() {
 
       setInspirationVideoUrl(data.videoUrl);
 
+      const compressed = await extractAudioFromVideo(videoFile);
+
       const formData = new FormData();
-      formData.append("video", videoFile);
+      formData.append("video", compressed);
       formData.append("brandUrl", brandUrl);
       formData.append("email", email);
       formData.append("metaLink", data.videoUrl);

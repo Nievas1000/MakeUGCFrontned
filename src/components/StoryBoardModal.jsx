@@ -17,6 +17,7 @@ export default function StoryboardModal({
   hookBody,
   inspirationDescription,
   inspirationUrl,
+  optimizedDataFromImages,
 }) {
   const [inspirationDescriptionVideo, setInspirationDescription] = useState(
     "This is a brief description of the inpsiration video which was inputted as a foundational part of creating this brief for the editor."
@@ -28,7 +29,7 @@ export default function StoryboardModal({
   const bodies = Object.entries(outputs).filter(([key]) =>
     key.startsWith("body")
   );
-
+  console.log(optimizedDataFromImages);
   return (
     <div className="max-w-4xl w-full p-6 space-y-6 relative">
       <div className="bg-white p-6 rounded shadow-md mb-10">
@@ -66,22 +67,22 @@ export default function StoryboardModal({
         <div className="flex-1">
           <h2 className="text-lg font-semibold mb-2">Inspiration Video</h2>
           <p className="text-sm text-gray-700 mb-4">
-            {inspirationDescriptionVideo}
+            {optimizedDataFromImages.output.overview}
           </p>
 
           <h3 className="text-sm font-semibold text-green-700 mb-2">
             Why this video works
           </h3>
           <ul className="space-y-1 text-sm text-gray-700">
-            <li className="flex items-center gap-2">
-              ✅ Point describing why the video works
-            </li>
-            <li className="flex items-center gap-2">
-              ✅ Point describing why the video works
-            </li>
-            <li className="flex items-center gap-2">
-              ✅ Point describing why the video works
-            </li>
+            {optimizedDataFromImages.output.reasons_ad_works.map(
+              (reason, index) => {
+                return (
+                  <li className="flex items-center gap-2" key={index}>
+                    ✅ {reason}
+                  </li>
+                );
+              }
+            )}
           </ul>
 
           <button

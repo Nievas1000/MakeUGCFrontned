@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { extractAudioFromVideo } from "../utils/compressVideo";
 
 const VARIANTS = [
   {
@@ -55,8 +56,12 @@ export default function HookRecreator() {
       return setVideo(null);
     }
 
-    setVideo(file);
-    setOriginalUrl(URL.createObjectURL(file));
+    const renamedFile = new File([file], "uploaded-video.mp4", {
+      type: "video/mp4",
+    });
+
+    setVideo(renamedFile);
+    setOriginalUrl(URL.createObjectURL(renamedFile));
   };
 
   const handleSubmit = async (e) => {
@@ -66,8 +71,9 @@ export default function HookRecreator() {
 
     setLoading(true);
     try {
+      const compressed = await extractAudioFromVideo(video);
       const formData = new FormData();
-      formData.append("video", video);
+      formData.append("video", compressed);
       formData.append("email", email);
 
       const res = await fetch(

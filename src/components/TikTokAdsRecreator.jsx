@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { extractAudioFromVideo } from "../utils/compressVideo";
 
 export default function TikTokAdsRecreator() {
   const [tiktokLink, setTiktokLink] = useState("");
@@ -62,8 +63,9 @@ export default function TikTokAdsRecreator() {
         type: "video/mp4",
       });
 
+      const compressed = await extractAudioFromVideo(videoFile);
       const formData = new FormData();
-      formData.append("video", videoFile);
+      formData.append("video", compressed);
       formData.append("brandUrl", brandUrl);
       formData.append("email", email);
       formData.append("tiktokLink", data.videoUrl);

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { extractAudioFromVideo } from "../utils/compressVideo";
 
 const LANGUAGES = [
   "Afrikaans",
@@ -93,14 +94,21 @@ export default function LanguageTranslation() {
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
-    if (file && file.size > 25 * 1024 * 1024) {
+    if (!file) return;
+
+    if (file.size > 25 * 1024 * 1024) {
       setError("File must be smaller than 25MB");
       setVideo(null);
-    } else {
-      setError("");
-      setVideo(file);
-      setOriginalPreview(URL.createObjectURL(file));
+      return;
     }
+
+    const renamedFile = new File([file], "uploaded-video.mp3", {
+      type: "video/mp3",
+    });
+
+    setError("");
+    setVideo(renamedFile);
+    setOriginalPreview(URL.createObjectURL(renamedFile));
   };
 
   const handleSubmit = async (e) => {
@@ -114,12 +122,13 @@ export default function LanguageTranslation() {
     setError("");
 
     try {
+      const compressed = await extractAudioFromVideo(video);
       const formData = new FormData();
-      formData.append("video", video);
+      formData.append("video", compressed);
       formData.append("languages", JSON.stringify(languages));
-
+      console.log(compressed);
       await fetch(
-        "https://pdog.app.n8n.cloud/webhook/ff839c4a-f848-4e3b-94a9-1b6679cf12ff",
+        "https://pdog.app.n8n.cloud/webhook-test/ff839c4a-f848-4e3b-94a9-1b6679cf12ff",
         {
           method: "POST",
           body: formData,

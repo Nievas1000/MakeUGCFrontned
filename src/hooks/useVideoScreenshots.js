@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function useVideoScreenshots(videoFile, setOptimizedScriptFromImages, originalTranscript, setStep, setFrameAnalysis) {
+export default function useVideoScreenshots(videoFile, setOptimizedDataFromImages, originalTranscript, setStep, setFrameAnalysis) {
     const [screenshots, setScreenshots] = useState([]);
     const [concatenatedText, setContatenadedText] = useState("")
 
@@ -22,8 +22,8 @@ export default function useVideoScreenshots(videoFile, setOptimizedScriptFromIma
             );
 
             const result = await response.json();
-            console.log("Full Inspiration Ad Analysis: ", result.text);
-            setOptimizedScriptFromImages(result?.text || "");
+            console.log("Full Inspiration Ad Analysis: ", result);
+            setOptimizedDataFromImages(result);
             setStep(3)
         } catch (err) {
             console.error("Error sending concatenated descriptions", err);
@@ -96,7 +96,7 @@ export default function useVideoScreenshots(videoFile, setOptimizedScriptFromIma
                 });
             }
 
-            await sendConcatenatedDescriptions(captures, setOptimizedScriptFromImages);
+            await sendConcatenatedDescriptions(captures, setOptimizedDataFromImages);
             setScreenshots(captures);
             setFrameAnalysis(false)
             URL.revokeObjectURL(video.src);
