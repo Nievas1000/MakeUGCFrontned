@@ -4,7 +4,7 @@ import StoryboardModal from "./StoryBoardModal";
 import ClipLoader from "react-spinners/ClipLoader";
 
 const inspirationVideoUrl =
-  "https://d2z160kjf6fhi8.cloudfront.net/cmboy4hyo0otmy1o6cnq00/private/cmc0ob2610002kf2a3wirmtoq_1750174413.mp4?...";
+  "https://d2z160kjf6fhi8.cloudfront.net/cmboy4hyo0otmy1o6cnq00/private/cmcg90tb800032i0nzhhrnnz1_1751116056.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAXEFUNV7O4BRRCEX5%2F20250628%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20250628T130746Z&X-Amz-Expires=604800&X-Amz-Signature=ff3bd8bb4c4f213fd97acbd6afef84cd07c85d23abbcffb418e7299cae7a5102&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3B%20filename%3Dcmcg90tb800032i0nzhhrnnz1.mp4&x-id=GetObject";
 
 export default function BriefCreator() {
   const [step, setStep] = useState(1);
@@ -19,7 +19,7 @@ export default function BriefCreator() {
   const [error, setError] = useState("");
   const [showFullTranscript, setShowFullTranscript] = useState(false);
   const [originalTranscript, setOriginalTranscript] = useState(
-    "Hi, I'm Dr. Mehmet from EMPHAIR Clinic, and today we're going to be doing an advanced DHI hair transplant. I'll show you exactly how we achieve natural results with our needle-free technology. Step one, we map your donor area and determine the perfect hairline design. What most people don't realize is that we extract each follicle at the perfect angle to match your natural growth pattern. And here's the best part - we use our special needle-free anesthesia system, so you feel absolutely nothing during the entire procedure. We use a specialized DHI implanter pen that creates the channel and places the graft simultaneously. You'll be completely comfortable throughout - no pain, no discomfort whatsoever. Then we'll carefully implant each follicle at the exact angle and depth, and you'll see immediate results with no scarring."
+    "I finally captured my grandmother's life story using Story Journals, and it's honestly the best thing for preserving memories that matter most. I wish I'd started sooner. These journals follow natural conversation flow to capture real stories without losing authentic voices. My mom says they changed our family dinners, my sister captured Dad's war stories before he forgot them, and my cousin got three generations talking again. If you're dealing with aging parents, grandparents with dementia, or regret about lost family history, Story Journals is the answer. Families everywhere are sharing success stories, and these journals are changing lives forever. Don't wait - start preserving those precious stories today."
   );
   const [optimizedTranscript, setOptimizedTranscript] = useState("");
   const [optimizedDataFromImages, setOptimizedDataFromImages] = useState("");

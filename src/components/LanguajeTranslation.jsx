@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { extractAudioFromVideo } from "../utils/compressVideo";
+import { ArrowRight, UploadCloud } from "lucide-react";
+import DragDropUploader from "./DragDropUploader";
 
 const LANGUAGES = [
   "Afrikaans",
@@ -76,45 +78,26 @@ export default function LanguageTranslation() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [originalPreview, setOriginalPreview] = useState(null);
 
   const addLanguage = () => {
     if (languages.length < 3) setLanguages([...languages, ""]);
   };
 
-  const removeLanguage = (idx) => {
-    setLanguages(languages.filter((_, i) => i !== idx));
+  const removeLanguage = (i) => {
+    setLanguages(languages.filter((_, idx) => idx !== i));
   };
 
-  const updateLanguage = (idx, val) => {
-    const arr = [...languages];
-    arr[idx] = val;
-    setLanguages(arr);
-  };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (file.size > 25 * 1024 * 1024) {
-      setError("File must be smaller than 25MB");
-      setVideo(null);
-      return;
-    }
-
-    const renamedFile = new File([file], "uploaded-video.mp3", {
-      type: "video/mp3",
-    });
-
-    setError("");
-    setVideo(renamedFile);
-    setOriginalPreview(URL.createObjectURL(renamedFile));
+  const updateLanguage = (i, value) => {
+    const copy = [...languages];
+    copy[i] = value;
+    setLanguages(copy);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!video || languages.some((lang) => !lang)) {
-      setError("All fields are required");
+      setError("All fields are required.");
       return;
     }
 
@@ -126,7 +109,7 @@ export default function LanguageTranslation() {
       const formData = new FormData();
       formData.append("video", compressed);
       formData.append("languages", JSON.stringify(languages));
-      console.log(compressed);
+
       await fetch(
         "https://pdog.app.n8n.cloud/webhook/ff839c4a-f848-4e3b-94a9-1b6679cf12ff",
         {
@@ -145,79 +128,107 @@ export default function LanguageTranslation() {
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-8 pt-5">
-        <div className="relative">
-          <div className="flex items-center">
-            <input
-              type="file"
-              accept=".mp4,.mp3,.mpeg,.mpga,.m4a,.wav,.webm"
-              onChange={handleFileChange}
-              className="flex-1 border-b-2 border-gray-300 py-2 focus:border-blue-500 focus:outline-none"
-              required
-            />
-            <div className="relative ml-2 group cursor-pointer">
-              <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
-                ?
-              </div>
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-black text-white text-xs px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
-                If your video has more than 1000 characters it may be slightly
-                modified.
-              </div>
-            </div>
-          </div>
+    <div className="flex items-center justify-center">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white w-full max-w-md p-6 rounded-xl shadow-lg space-y-6"
+      >
+        {/* Header */}
+        <div className="text-center">
+          <h2 className="text-lg font-semibold text-gray-900">
+            Translate Your Video
+          </h2>
+          <p className="text-sm text-gray-500">
+            Upload your video and choose up to 3 languages. We'll generate
+            translated versions.
+          </p>
         </div>
 
-        {languages.map((lang, i) => (
-          <div key={i} className="flex space-x-2 items-center">
-            <select
-              value={lang}
-              onChange={(e) => updateLanguage(i, e.target.value)}
-              className="flex-1 p-3 border rounded"
-              required
-            >
-              <option value="">Select Language</option>
-              {LANGUAGES.map((l) => (
-                <option key={l} value={l}>
-                  {l}
-                </option>
-              ))}
-            </select>
-            <button
-              type="button"
-              onClick={() => removeLanguage(i)}
-              className="p-2 bg-red-500 rounded text-white"
-            >
-              ×
-            </button>
-          </div>
-        ))}
+        {/* Upload Field */}
+        <DragDropUploader
+          file={video}
+          onFileSelected={(file) => {
+            if (!file) return;
 
+            if (file.size > 25 * 1024 * 1024) {
+              setError("File must be smaller than 25MB");
+              setVideo(null);
+              return;
+            }
+
+            const renamedFile = new File([file], "uploaded-video.mp4", {
+              type: "video/mp4",
+            });
+
+            setError("");
+            setVideo(renamedFile);
+          }}
+          onRemove={() => setVideo(null)}
+        />
+
+        {/* Language Selectors */}
+        <div className="space-y-3">
+          {languages.map((lang, i) => (
+            <div key={i} className="flex items-center space-x-2">
+              <select
+                value={lang}
+                onChange={(e) => updateLanguage(i, e.target.value)}
+                className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              >
+                <option value="">Select Language</option>
+                {LANGUAGES.map((l) => (
+                  <option key={l} value={l}>
+                    {l}
+                  </option>
+                ))}
+              </select>
+              <button
+                type="button"
+                onClick={() => removeLanguage(i)}
+                className="text-red-600 hover:text-red-800 text-xl px-2"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
+
+        {/* Add Language */}
         {languages.length < 3 && (
           <button
             type="button"
             onClick={addLanguage}
-            className="w-full py-2 bg-gray-200 rounded"
+            className="w-full text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded-md transition"
           >
             + Add Language
           </button>
         )}
 
+        {/* Submit */}
         <button
           type="submit"
-          className="block w-full py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm py-3 rounded-md flex justify-center items-center gap-2 transition"
           disabled={loading}
         >
-          {loading ? "Generating..." : "Generate"}
+          {loading ? (
+            "Generating..."
+          ) : (
+            <>
+              Generate Translations <ArrowRight size={16} />
+            </>
+          )}
         </button>
 
+        {/* Error */}
         {error && (
-          <p className="text-red-600 text-sm font-medium text-center">
+          <p className="text-red-500 text-sm font-medium text-center">
             {error}
           </p>
         )}
       </form>
 
+      {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/30 backdrop-blur-sm p-4">
           <div className="bg-white rounded-xl shadow-xl p-6 max-w-md w-full relative text-center space-y-4">
@@ -227,13 +238,12 @@ export default function LanguageTranslation() {
             >
               ×
             </button>
-
             <h3 className="text-lg font-semibold">
-              We'll notify you via email once your video is ready.
+              We'll notify you once your translations are ready.
             </h3>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }

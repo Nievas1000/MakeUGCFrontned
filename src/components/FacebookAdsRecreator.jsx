@@ -1,76 +1,67 @@
 import { useState } from "react";
+import { ArrowRight, Globe, UploadCloud } from "lucide-react";
 import { extractAudioFromVideo } from "../utils/compressVideo";
+import DragDropUploader from "./DragDropUploader";
 
 export default function FacebookAdsRecreator() {
+  const [tab, setTab] = useState("url"); // 'url' or 'upload'
   const [metaLink, setMetaLink] = useState("");
+  const [videoFile, setVideoFile] = useState(null);
   const [brandUrl, setBrandUrl] = useState("");
   const [email, setEmail] = useState("");
-  const [inspirationVideoUrl, setInspirationVideoUrl] = useState("");
-  const [generatedVideoUrl, setGeneratedVideoUrl] = useState("");
-  const [script, setScript] = useState("");
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [modalReady, setModalReady] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setError("");
-    setInspirationVideoUrl("");
-    setGeneratedVideoUrl("");
-    setScript("");
-    setIsModalOpen(true);
+    setLoading(true);
     setModalReady(false);
 
-    if (!metaLink.includes("facebook.com/ads/library")) {
-      setError("Please enter a valid Meta Ads Library link.");
-      setIsModalOpen(false);
-      setLoading(false);
-      return;
-    }
-
     try {
-      const res = await fetch(
-        "https://n8n-stabmediabackend.jdirlx.easypanel.host/api/get-video",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ adUrl: metaLink }),
-        }
-      );
+      let finalVideo = videoFile;
 
-      const data = await res.json();
-      if (!res.ok || !data.base64 || !data.videoUrl) {
-        throw new Error(data.error || "Video could not be retrieved.");
+      if (tab === "url") {
+        if (!metaLink.includes("facebook.com/ads/library")) {
+          setError("Please enter a valid Meta Ads Library link.");
+          setLoading(false);
+          return;
+        }
+
+        const res = await fetch(
+          "https://n8n-stabmediabackend.jdirlx.easypanel.host/api/get-video",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ adUrl: metaLink }),
+          }
+        );
+
+        const data = await res.json();
+        if (!res.ok || !data.base64) {
+          throw new Error("Video could not be retrieved.");
+        }
+
+        const byteCharacters = atob(data.base64);
+        const byteArrays = [];
+        for (let i = 0; i < byteCharacters.length; i += 1024) {
+          const slice = byteCharacters.slice(i, i + 1024);
+          const byteNumbers = Array.from(slice).map((c) => c.charCodeAt(0));
+          byteArrays.push(new Uint8Array(byteNumbers));
+        }
+        const blob = new Blob(byteArrays, { type: "video/mp4" });
+        finalVideo = new File([blob], "meta-video.mp4", { type: "video/mp4" });
       }
 
-      const byteCharacters = atob(data.base64);
-      const byteArrays = [];
-      for (let i = 0; i < byteCharacters.length; i += 1024) {
-        const slice = byteCharacters.slice(i, i + 1024);
-        const byteNumbers = new Array(slice.length);
-        for (let j = 0; j < slice.length; j++) {
-          byteNumbers[j] = slice.charCodeAt(j);
-        }
-        byteArrays.push(new Uint8Array(byteNumbers));
-      }
-      const videoBlob = new Blob(byteArrays, { type: "video/mp4" });
-      const videoFile = new File([videoBlob], "meta-video.mp4", {
-        type: "video/mp4",
-      });
-
-      setInspirationVideoUrl(data.videoUrl);
-
-      const compressed = await extractAudioFromVideo(videoFile);
-
+      const compressed = await extractAudioFromVideo(finalVideo);
       const formData = new FormData();
       formData.append("video", compressed);
       formData.append("brandUrl", brandUrl);
       formData.append("email", email);
-      formData.append("metaLink", data.videoUrl);
+      formData.append("metaLink", metaLink || "uploaded");
 
-      const webhookRes = await fetch(
+      await fetch(
         "https://pdog.app.n8n.cloud/webhook/c77f11e4-8111-44e9-af8c-704741c75a47",
         {
           method: "POST",
@@ -78,83 +69,143 @@ export default function FacebookAdsRecreator() {
         }
       );
 
-      /* const webhookData = await webhookRes.json();
-      setGeneratedVideoUrl(webhookData.video_url || "");
-      setScript(webhookData.script || "No script received"); */
-
       setModalReady(true);
     } catch (err) {
-      setError(err.message || "An error occurred");
-      setIsModalOpen(false);
+      setError(err.message || "Something went wrong.");
     } finally {
       setLoading(false);
     }
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setModalReady(false);
-  };
   return (
-    <div className="max-w-md mx-auto pt-5 space-y-6">
-      {/* Modal */}
-
-      {modalReady && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/30 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-xl shadow-xl p-6 max-w-md w-full relative text-center space-y-4">
-            <button
-              onClick={() => setModalReady(false)}
-              className="absolute top-2 right-3 text-gray-600 hover:text-red-600 text-2xl"
-            >
-              ×
-            </button>
-
-            <h3 className="text-lg font-semibold">
-              We'll notify you via email once your video is ready.
-            </h3>
-          </div>
+    <div className="flex items-center justify-center">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white w-full max-w-md p-6 rounded-xl shadow-lg space-y-6"
+      >
+        {/* Header */}
+        <div className="text-center">
+          <h1 className="text-xl font-bold text-gray-900 mb-2">
+            Facebook Ad Recreator
+          </h1>
+          <p className="text-md text-gray-500">
+            Paste a Facebook Ads Library link or upload a video and your
+            website—we’ll recreate the ad as a fresh, ready-to-run MakeUGC
+            video.
+          </p>
         </div>
-      )}
-      {/* Form */}
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <input
-          type="url"
-          placeholder="Meta ads library link"
-          value={metaLink}
-          onChange={(e) => setMetaLink(e.target.value)}
-          className="w-full border-b-2 border-gray-300 py-2 focus:border-blue-500 focus:outline-none"
-          required
-        />
-        <input
-          type="url"
-          placeholder="Enter brand URL"
-          value={brandUrl}
-          onChange={(e) => setBrandUrl(e.target.value)}
-          className="w-full border-b-2 border-gray-300 py-2 focus:border-blue-500 focus:outline-none"
-          required
-        />
-        <input
-          type="email"
-          placeholder="Enter email address"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full border-b-2 border-gray-300 py-2 focus:border-blue-500 focus:outline-none"
-          required
-        />
+
+        {/* Tabs */}
+        <div className="flex border rounded-md overflow-hidden">
+          <button
+            type="button"
+            onClick={() => setTab("url")}
+            className={`flex-1 py-2 text-sm font-medium ${
+              tab === "url"
+                ? "bg-gray-100 text-gray-900"
+                : "bg-white text-gray-500"
+            }`}
+          >
+            Meta URL
+          </button>
+          <button
+            type="button"
+            onClick={() => setTab("upload")}
+            className={`flex-1 py-2 text-sm font-medium ${
+              tab === "upload"
+                ? "bg-gray-100 text-gray-900"
+                : "bg-white text-gray-500"
+            }`}
+          >
+            Upload Video
+          </button>
+        </div>
+
+        {/* Conditional input */}
+        {tab === "url" ? (
+          <input
+            type="url"
+            placeholder="https://www.facebook.com/ads/library/..."
+            value={metaLink}
+            onChange={(e) => setMetaLink(e.target.value)}
+            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        ) : (
+          <DragDropUploader
+            file={videoFile}
+            onFileSelected={(file) => {
+              if (!file) return;
+
+              if (file.size > 25 * 1024 * 1024) {
+                setError("File must be smaller than 25MB");
+                setVideoFile(null);
+                return;
+              }
+
+              const renamedFile = new File([file], "uploaded-video.mp3", {
+                type: "video/mp3",
+              });
+
+              setError("");
+              setVideoFile(renamedFile);
+            }}
+            onRemove={() => setVideoFile(null)}
+          />
+        )}
+
+        {/* Website input with icon */}
+        <div className="relative">
+          <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <input
+            type="url"
+            placeholder="https://yourwebsite.com"
+            value={brandUrl}
+            onChange={(e) => setBrandUrl(e.target.value)}
+            className="w-full pl-10 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+
+        {/* Submit */}
         <button
           type="submit"
-          className="block w-full py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm py-3 rounded-md flex justify-center items-center gap-2 transition"
           disabled={loading}
         >
-          {loading ? "Generating..." : "Generate Script"}
+          {loading ? (
+            "Generating..."
+          ) : (
+            <>
+              Generate Video <ArrowRight size={16} />
+            </>
+          )}
         </button>
-      </form>
 
-      {error && (
-        <div className="text-red-600 font-semibold text-sm text-center">
-          {error}
-        </div>
-      )}
+        {/* Error */}
+        {error && (
+          <p className="text-red-500 text-sm text-center font-medium">
+            {error}
+          </p>
+        )}
+
+        {/* Modal success */}
+        {modalReady && (
+          <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/30 backdrop-blur-sm p-4">
+            <div className="bg-white rounded-xl shadow-xl p-6 max-w-md w-full relative text-center space-y-4">
+              <button
+                onClick={() => setModalReady(false)}
+                className="absolute top-2 right-3 text-gray-600 hover:text-red-600 text-2xl"
+              >
+                ×
+              </button>
+              <h3 className="text-lg font-semibold">
+                We'll notify you via email once your video is ready.
+              </h3>
+            </div>
+          </div>
+        )}
+      </form>
     </div>
   );
 }
