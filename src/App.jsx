@@ -52,10 +52,10 @@ const tools = [
   },
   {
     key: "briefCreator",
-    name: "Brief Creator",
+    name: "Briefer",
     component: BriefCreator,
     description:
-      "Transform any Facebook ad into a new AI-generated video by analyzing its structure, combining it with your brand’s identity, and regenerating the script via MakeUGC.",
+      "Generate a high-converting creative brief from any video. We’ll analyze your existing MakeUGC ad, compare it to an inspiration video, generate fresh variations, and return a modular brief with editing notes, scripts, and a full storyboard.",
   },
   {
     key: "localised",
