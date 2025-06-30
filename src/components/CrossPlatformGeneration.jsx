@@ -117,8 +117,17 @@ export default function CrossPlatformGeneration() {
   };
 
   return (
-    <>
+    <div className="max-w-3xl mx-auto p-6 space-y-6 bg-white rounded-lg shadow-md">
       <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-8 pt-5">
+        <div className="text-center">
+          <h1 className="text-xl font-bold text-gray-900 mb-2">
+            Cross Platform Script Generator
+          </h1>
+          <p className="text-md text-gray-500">
+            Upload a Meta or TikTok ad and choose your target platform—we’ll
+            rewrite it for native performance and generate the new video.
+          </p>
+        </div>
         {/* Modo conversión */}
         <div className="flex space-x-2">
           <button
@@ -260,6 +269,6 @@ export default function CrossPlatformGeneration() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }

@@ -173,6 +173,15 @@ export default function MetaAdManager() {
 
   return (
     <div className="max-w-3xl mx-auto p-6 space-y-6">
+      <div className="text-center">
+        <h1 className="text-xl font-bold text-gray-900 mb-2">
+          Meta Ads Uploader
+        </h1>
+        <p className="text-md text-gray-500">
+          Upload your files, pick your campaign, and optionally enhance
+          text—then launch directly to Meta with one click.
+        </p>
+      </div>
       {token && userInfo && (
         <div className="text-lg flexitems-center text-gray-600">
           👤 Logged in as <strong>{userInfo.name}</strong>

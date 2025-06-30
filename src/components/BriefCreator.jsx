@@ -167,7 +167,14 @@ export default function BriefCreator() {
         />
       ) : (
         <>
-          <h2 className="text-2xl font-bold text-center">Create Brief</h2>
+          <div className="text-center">
+            <h1 className="text-xl font-bold text-gray-900 mb-2">Briefer</h1>
+            <p className="text-md text-gray-500">
+              Choose a MakeUGC video and upload an inspiration ad — we’ll create
+              your full creative brief with new hooks, scripts, and
+              scene-by-scene guidance.
+            </p>
+          </div>
 
           {step === 1 && (
             <div className="max-w-2xl mx-auto mt-10 space-y-6">
