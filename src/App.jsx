@@ -21,8 +21,8 @@ const HookRecreator = lazy(() => import("./components/HookRecreator"));
 const MetaAdUploader = lazy(() => import("./components/MetaAdUploader"));
 const BriefCreator = lazy(() => import("./components/BriefCreator"));
 const EmailIteratedAds = lazy(() => import("./components/EmailIteratedAds"));
-const LanguajeTranslation = lazy(() =>
-  import("./components/LanguajeTranslation")
+const LanguageTranslation = lazy(() =>
+  import("./components/LanguageTranslation")
 );
 const CrossPlatformGeneration = lazy(() =>
   import("./components/CrossPlatformGeneration")
@@ -59,8 +59,8 @@ const tools = [
   },
   {
     key: "localised",
-    name: "Languaje Translation",
-    component: LanguajeTranslation,
+    name: "Language Translation",
+    component: LanguageTranslation,
     description:
       "Upload an ad and get back translations in your chosen languages. The system adapts phrasing and delivery for cultural relevance and visual alignment.",
   },
