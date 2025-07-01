@@ -2,6 +2,7 @@ import { useState } from "react";
 import { extractAudioFromVideo } from "../utils/compressVideo";
 import { ArrowRight, UploadCloud } from "lucide-react";
 import DragDropUploader from "./DragDropUploader";
+import EmailConfirmation from "./EmailConfirmation";
 
 const LANGUAGES = [
   "Afrikaans",
@@ -129,120 +130,101 @@ export default function LanguageTranslation() {
 
   return (
     <div className="flex items-center justify-center">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white w-full max-w-md p-6 rounded-xl shadow-lg space-y-6"
-      >
-        {/* Header */}
-        <div className="text-center">
-          <h2 className="text-lg font-semibold text-gray-900">
-            Translate Your Video
-          </h2>
-          <p className="text-sm text-gray-500">
-            Upload your video and choose up to 3 languages. We'll generate
-            translated versions.
-          </p>
-        </div>
-
-        {/* Upload Field */}
-        <DragDropUploader
-          file={video}
-          onFileSelected={(file) => {
-            if (!file) return;
-
-            if (file.size > 25 * 1024 * 1024) {
-              setError("File must be smaller than 25MB");
-              setVideo(null);
-              return;
-            }
-
-            const renamedFile = new File([file], "uploaded-video.mp4", {
-              type: "video/mp4",
-            });
-
-            setError("");
-            setVideo(renamedFile);
-          }}
-          onRemove={() => setVideo(null)}
-        />
-
-        {/* Language Selectors */}
-        <div className="space-y-3">
-          {languages.map((lang, i) => (
-            <div key={i} className="flex items-center space-x-2">
-              <select
-                value={lang}
-                onChange={(e) => updateLanguage(i, e.target.value)}
-                className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              >
-                <option value="">Select Language</option>
-                {LANGUAGES.map((l) => (
-                  <option key={l} value={l}>
-                    {l}
-                  </option>
-                ))}
-              </select>
-              <button
-                type="button"
-                onClick={() => removeLanguage(i)}
-                className="text-red-600 hover:text-red-800 text-xl px-2"
-              >
-                ×
-              </button>
-            </div>
-          ))}
-        </div>
-
-        {/* Add Language */}
-        {languages.length < 3 && (
-          <button
-            type="button"
-            onClick={addLanguage}
-            className="w-full text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded-md transition"
-          >
-            + Add Language
-          </button>
-        )}
-
-        {/* Submit */}
-        <button
-          type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm py-3 rounded-md flex justify-center items-center gap-2 transition"
-          disabled={loading}
+      {showModal ? (
+        <EmailConfirmation />
+      ) : (
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white w-full max-w-md p-6 rounded-xl shadow-lg space-y-6"
         >
-          {loading ? (
-            "Generating..."
-          ) : (
-            <>
-              Generate Translations <ArrowRight size={16} />
-            </>
-          )}
-        </button>
-
-        {/* Error */}
-        {error && (
-          <p className="text-red-500 text-sm font-medium text-center">
-            {error}
-          </p>
-        )}
-      </form>
-
-      {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/30 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-xl shadow-xl p-6 max-w-md w-full relative text-center space-y-4">
-            <button
-              onClick={() => setShowModal(false)}
-              className="absolute top-2 right-3 text-gray-600 hover:text-red-600 text-2xl"
-            >
-              ×
-            </button>
-            <h3 className="text-lg font-semibold">
-              We'll notify you once your translations are ready.
-            </h3>
+          <div className="text-center">
+            <h2 className="text-lg font-semibold text-gray-900">
+              Translate Your Video
+            </h2>
+            <p className="text-sm text-gray-500">
+              Upload your video and choose up to 3 languages. We'll generate
+              translated versions.
+            </p>
           </div>
-        </div>
+
+          <DragDropUploader
+            file={video}
+            onFileSelected={(file) => {
+              if (!file) return;
+
+              if (file.size > 25 * 1024 * 1024) {
+                setError("File must be smaller than 25MB");
+                setVideo(null);
+                return;
+              }
+
+              const renamedFile = new File([file], "uploaded-video.mp4", {
+                type: "video/mp4",
+              });
+
+              setError("");
+              setVideo(renamedFile);
+            }}
+            onRemove={() => setVideo(null)}
+          />
+
+          <div className="space-y-3">
+            {languages.map((lang, i) => (
+              <div key={i} className="flex items-center space-x-2">
+                <select
+                  value={lang}
+                  onChange={(e) => updateLanguage(i, e.target.value)}
+                  className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                >
+                  <option value="">Select Language</option>
+                  {LANGUAGES.map((l) => (
+                    <option key={l} value={l}>
+                      {l}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  type="button"
+                  onClick={() => removeLanguage(i)}
+                  className="text-red-600 hover:text-red-800 text-xl px-2"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {languages.length < 3 && (
+            <button
+              type="button"
+              onClick={addLanguage}
+              className="w-full text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded-md transition"
+            >
+              + Add Language
+            </button>
+          )}
+
+          <button
+            type="submit"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm py-3 rounded-md flex justify-center items-center gap-2 transition"
+            disabled={loading}
+          >
+            {loading ? (
+              "Generating..."
+            ) : (
+              <>
+                Generate Translations <ArrowRight size={16} />
+              </>
+            )}
+          </button>
+
+          {error && (
+            <p className="text-red-500 text-sm font-medium text-center">
+              {error}
+            </p>
+          )}
+        </form>
       )}
     </div>
   );

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { extractAudioFromVideo } from "../utils/compressVideo";
 import { ArrowRight, UploadCloud } from "lucide-react";
+import EmailConfirmation from "./EmailConfirmation";
 
 const VARIANTS = [
   {
@@ -92,95 +93,75 @@ export default function HookRecreator() {
 
   return (
     <div className="flex items-center justify-center">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white w-full max-w-md p-6 rounded-xl shadow-lg space-y-6"
-      >
-        {/* Header */}
-        <div className="text-center">
-          <h2 className="text-lg font-semibold text-gray-900">
-            Hook Variants Generator
-          </h2>
-          <p className="text-sm text-gray-500">
-            Upload a video and we'll recreate it into 3 viral hooks: Emotional,
-            Curiosity, and Urgency.
-          </p>
-        </div>
-
-        {/* Upload only */}
-        <div className="border-2 border-dashed border-gray-300 rounded-md p-6 text-center cursor-pointer hover:border-blue-400 transition">
-          <label
-            htmlFor="video-upload"
-            className="flex flex-col items-center space-y-2"
-          >
-            <UploadCloud className="w-6 h-6 text-gray-400" />
-            <span className="text-sm text-gray-700">
-              Drag and drop your video here
-            </span>
-            <span className="text-xs text-gray-400">
-              or click to select a file
-            </span>
-            <span className="text-xs text-gray-400">
-              MP4, MOV, or WebM up to 25MB
-            </span>
-          </label>
-          <input
-            type="file"
-            id="video-upload"
-            accept=".mp4,.mpeg,.mp3,.mpga,.m4a,.wav,.webm"
-            onChange={handleFileChange}
-            className="hidden"
-            required
-          />
-          {video && (
-            <div className="text-xs text-gray-600 mt-2 truncate">
-              Selected: {video.name}
-            </div>
-          )}
-        </div>
-
-        {/* Submit */}
-        <button
-          type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm py-3 rounded-md flex justify-center items-center gap-2 transition"
-          disabled={loading}
+      {showModal ? (
+        <EmailConfirmation />
+      ) : (
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white w-full max-w-md p-6 rounded-xl shadow-lg space-y-6"
         >
-          {loading ? (
-            "Uploading..."
-          ) : (
-            <>
-              Generate Variants <ArrowRight size={16} />
-            </>
-          )}
-        </button>
-
-        {/* Error */}
-        {error && (
-          <p className="text-center text-red-600 font-medium text-sm">
-            {error}
-          </p>
-        )}
-      </form>
-
-      {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/30 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-xl shadow-xl p-6 max-w-md w-full relative text-center space-y-4">
-            <button
-              onClick={() => setShowModal(false)}
-              className="absolute top-2 right-3 text-gray-600 hover:text-red-600 text-2xl"
-            >
-              ×
-            </button>
-            <h3 className="text-lg font-semibold">
-              Your video is being processed.
-            </h3>
-            <p className="text-sm text-gray-600">
-              You'll receive 3 new variants shortly: Emotional, Curiosity, and
-              Urgency.
+          {/* Header */}
+          <div className="text-center">
+            <h2 className="text-lg font-semibold text-gray-900">
+              Hook Variants Generator
+            </h2>
+            <p className="text-sm text-gray-500">
+              Upload a video and we'll recreate it into 3 viral hooks:
+              Emotional, Curiosity, and Urgency.
             </p>
           </div>
-        </div>
+
+          <div className="border-2 border-dashed border-gray-300 rounded-md p-6 text-center cursor-pointer hover:border-blue-400 transition">
+            <label
+              htmlFor="video-upload"
+              className="flex flex-col items-center space-y-2"
+            >
+              <UploadCloud className="w-6 h-6 text-gray-400" />
+              <span className="text-sm text-gray-700">
+                Drag and drop your video here
+              </span>
+              <span className="text-xs text-gray-400">
+                or click to select a file
+              </span>
+              <span className="text-xs text-gray-400">
+                MP4, MOV, or WebM up to 25MB
+              </span>
+            </label>
+            <input
+              type="file"
+              id="video-upload"
+              accept=".mp4,.mpeg,.mp3,.mpga,.m4a,.wav,.webm"
+              onChange={handleFileChange}
+              className="hidden"
+              required
+            />
+            {video && (
+              <div className="text-xs text-gray-600 mt-2 truncate">
+                Selected: {video.name}
+              </div>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm py-3 rounded-md flex justify-center items-center gap-2 transition"
+            disabled={loading}
+          >
+            {loading ? (
+              "Uploading..."
+            ) : (
+              <>
+                Generate Variants <ArrowRight size={16} />
+              </>
+            )}
+          </button>
+
+          {error && (
+            <p className="text-center text-red-600 font-medium text-sm">
+              {error}
+            </p>
+          )}
+        </form>
       )}
     </div>
   );

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { extractAudioFromVideo } from "../utils/compressVideo";
 import { Globe } from "lucide-react";
 import DragDropUploader from "./DragDropUploader";
+import EmailConfirmation from "./EmailConfirmation";
 
 export default function CrossPlatformGeneration() {
   const [mode, setMode] = useState("metaToTikTok");
@@ -118,156 +119,140 @@ export default function CrossPlatformGeneration() {
 
   return (
     <div className="max-w-3xl mx-auto p-6 space-y-6 bg-white rounded-lg shadow-md">
-      <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-8 pt-5">
-        <div className="text-center">
-          <h1 className="text-xl font-bold text-gray-900 mb-2">
-            Cross Platform Script Generator
-          </h1>
-          <p className="text-md text-gray-500">
-            Upload a Meta or TikTok ad and choose your target platform—we’ll
-            rewrite it for native performance and generate the new video.
-          </p>
-        </div>
-        {/* Modo conversión */}
-        <div className="flex space-x-2">
-          <button
-            type="button"
-            onClick={() => setMode("metaToTikTok")}
-            className={`flex-1 py-2 rounded ${
-              mode === "metaToTikTok"
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-gray-700"
-            }`}
-          >
-            Meta → TikTok
-          </button>
-          <button
-            type="button"
-            onClick={() => setMode("tiktokToMeta")}
-            className={`flex-1 py-2 rounded ${
-              mode === "tiktokToMeta"
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-gray-700"
-            }`}
-          >
-            TikTok → Meta
-          </button>
-        </div>
-
-        {/* Tabs */}
-        <div className="flex border rounded-md overflow-hidden">
-          <button
-            type="button"
-            onClick={() => setTab("link")}
-            className={`flex-1 py-2 text-sm font-medium ${
-              tab === "link"
-                ? "bg-gray-100 text-gray-900"
-                : "bg-white text-gray-500"
-            }`}
-          >
-            Enter Link
-          </button>
-          <button
-            type="button"
-            onClick={() => setTab("upload")}
-            className={`flex-1 py-2 text-sm font-medium ${
-              tab === "upload"
-                ? "bg-gray-100 text-gray-900"
-                : "bg-white text-gray-500"
-            }`}
-          >
-            Upload Video
-          </button>
-        </div>
-
-        {tab === "link" ? (
-          <input
-            type="url"
-            placeholder={
-              mode === "metaToTikTok"
-                ? "Meta Ads Library URL"
-                : "TikTok Ads Library URL"
-            }
-            value={link}
-            onChange={(e) => setLink(e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        ) : (
-          <DragDropUploader
-            file={video}
-            onFileSelected={(file) => {
-              setError("");
-              setPreviewUrl("");
-
-              if (!file) return setVideo(null);
-
-              if (!allowedTypes.includes(file.type)) {
-                setError("Unsupported file type");
-                return setVideo(null);
-              }
-
-              if (file.size > 25 * 1024 * 1024) {
-                setError("File exceeds 25 MB limit");
-                return setVideo(null);
-              }
-
-              const renamed = new File([file], "ad-video.mp4", {
-                type: "video/mp4",
-              });
-              setVideo(renamed);
-              setPreviewUrl(URL.createObjectURL(renamed));
-            }}
-            onRemove={() => setVideo(null)}
-          />
-        )}
-
-        {/* Website */}
-        <div className="relative">
-          <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <input
-            type="url"
-            placeholder="https://yourwebsite.com"
-            value={brandUrl}
-            onChange={(e) => setBrandUrl(e.target.value)}
-            className="w-full pl-10 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-
-        {/* Email */}
-
-        {/* Submit */}
-        <button
-          type="submit"
-          className="block w-full py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
-          disabled={loading}
+      {showModal ? (
+        <EmailConfirmation />
+      ) : (
+        <form
+          onSubmit={handleSubmit}
+          className="max-w-md mx-auto space-y-8 pt-5"
         >
-          {loading ? "Generating..." : "Generate"}
-        </button>
-
-        {error && (
-          <p className="text-red-600 text-sm font-medium text-center">
-            {error}
-          </p>
-        )}
-      </form>
-
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/30 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-xl shadow-xl p-6 max-w-md w-full relative text-center space-y-4">
-            <button
-              onClick={() => setShowModal(false)}
-              className="absolute top-2 right-3 text-gray-600 hover:text-red-600 text-2xl"
-            >
-              ×
-            </button>
-
-            <h3 className="text-lg font-semibold">
-              We'll notify you via email once your video is ready.
-            </h3>
+          <div className="text-center">
+            <h1 className="text-xl font-bold text-gray-900 mb-2">
+              Cross Platform Script Generator
+            </h1>
+            <p className="text-md text-gray-500">
+              Upload a Meta or TikTok ad and choose your target platform—we’ll
+              rewrite it for native performance and generate the new video.
+            </p>
           </div>
-        </div>
+          <div className="flex space-x-2">
+            <button
+              type="button"
+              onClick={() => setMode("metaToTikTok")}
+              className={`flex-1 py-2 rounded ${
+                mode === "metaToTikTok"
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-200 text-gray-700"
+              }`}
+            >
+              Meta → TikTok
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode("tiktokToMeta")}
+              className={`flex-1 py-2 rounded ${
+                mode === "tiktokToMeta"
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-200 text-gray-700"
+              }`}
+            >
+              TikTok → Meta
+            </button>
+          </div>
+
+          <div className="flex border rounded-md overflow-hidden">
+            <button
+              type="button"
+              onClick={() => setTab("link")}
+              className={`flex-1 py-2 text-sm font-medium ${
+                tab === "link"
+                  ? "bg-gray-100 text-gray-900"
+                  : "bg-white text-gray-500"
+              }`}
+            >
+              Enter Link
+            </button>
+            <button
+              type="button"
+              onClick={() => setTab("upload")}
+              className={`flex-1 py-2 text-sm font-medium ${
+                tab === "upload"
+                  ? "bg-gray-100 text-gray-900"
+                  : "bg-white text-gray-500"
+              }`}
+            >
+              Upload Video
+            </button>
+          </div>
+
+          {tab === "link" ? (
+            <input
+              type="url"
+              placeholder={
+                mode === "metaToTikTok"
+                  ? "Meta Ads Library URL"
+                  : "TikTok Ads Library URL"
+              }
+              value={link}
+              onChange={(e) => setLink(e.target.value)}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          ) : (
+            <DragDropUploader
+              file={video}
+              onFileSelected={(file) => {
+                setError("");
+                setPreviewUrl("");
+
+                if (!file) return setVideo(null);
+
+                if (!allowedTypes.includes(file.type)) {
+                  setError("Unsupported file type");
+                  return setVideo(null);
+                }
+
+                if (file.size > 25 * 1024 * 1024) {
+                  setError("File exceeds 25 MB limit");
+                  return setVideo(null);
+                }
+
+                const renamed = new File([file], "ad-video.mp4", {
+                  type: "video/mp4",
+                });
+                setVideo(renamed);
+                setPreviewUrl(URL.createObjectURL(renamed));
+              }}
+              onRemove={() => setVideo(null)}
+            />
+          )}
+
+          <div className="relative">
+            <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="url"
+              placeholder="https://yourwebsite.com"
+              value={brandUrl}
+              onChange={(e) => setBrandUrl(e.target.value)}
+              className="w-full pl-10 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="block w-full py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+            disabled={loading}
+          >
+            {loading ? "Generating..." : "Generate"}
+          </button>
+
+          {error && (
+            <p className="text-red-600 text-sm font-medium text-center">
+              {error}
+            </p>
+          )}
+        </form>
       )}
     </div>
   );
